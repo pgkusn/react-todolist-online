@@ -3,8 +3,8 @@ function Register() {
     <div className="bg-yellow">
       <div className="conatiner signUpPage vhContainer">
         <div className="side">
-          <img className="logoImg" src="https://upload.cc/i1/2022/03/23/rhefZ3.png" alt="" />
-          <img className="d-m-n" src="https://upload.cc/i1/2022/03/23/tj3Bdk.png" alt="workImg" />
+          <img className="logoImg" src="https://user-images.githubusercontent.com/10492197/187050823-f78cc9b3-a62e-4e48-b52a-bf336b231de0.png" alt="" />
+          <img className="d-m-n" src="https://user-images.githubusercontent.com/10492197/187050825-f4f68aec-2df9-468f-b10c-b7cedfa40757.png" alt="workImg" />
         </div>
         <div>
           <form className="formControls" action="index.html">

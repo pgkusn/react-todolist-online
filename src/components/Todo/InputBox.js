@@ -1,6 +1,9 @@
 import { useState } from 'react'
+import { api } from '../../helpers/api'
+import { useAuth } from '../../helpers/Context'
 
 function InputBox({ setList }) {
+  const { token } = useAuth()
   const [value, setValue] = useState('')
 
   const submit = e => {
@@ -8,7 +11,21 @@ function InputBox({ setList }) {
     const content = value.trim()
     if (!content) return
     setList(state => [...state, { id: Date.now(), state: 'active', content }])
+    postTodo(content)
     setValue('')
+  }
+
+  const postTodo = async content => {
+    try {
+      await api({
+        method: 'post',
+        url: '/todos',
+        headers: { authorization: token },
+        data: { todo: { content } }
+      })
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   return (

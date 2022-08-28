@@ -3,19 +3,7 @@ import InputBox from './InputBox'
 import TodoList from './TodoList'
 
 function Todo() {
-  const [list, setList] = useState([
-    {
-      id: 1,
-      state: 'active',
-      content: '把冰箱發霉的檸檬拿去丟',
-    },
-    {
-      id: 2,
-      state: 'active',
-      content: '打電話叫媽媽匯款給我',
-    },
-  ])
-
+  const [list, setList] = useState([])
   return (
     <div className="bg-half">
       <nav>
