@@ -10,7 +10,7 @@ function TodoItem({ data, changeItem, removeItem }) {
         />
         <span>{data.content}</span>
       </label>
-      <button onClick={e => removeItem(e, data.id)}>
+      <button onClick={() => removeItem(data.id)}>
         <i className="fa fa-times"></i>
       </button>
     </li>

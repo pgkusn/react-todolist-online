@@ -10,12 +10,11 @@ api.interceptors.response.use(
     return response
   },
   function (error) {
-    if (error.response.status === 401) {
-      Swal.fire({
-        icon: 'error',
-        title: error.response.data.message || '發生不明錯誤',
-      })
-    }
+    Swal.fire({
+      icon: 'error',
+      title: error.response.data.message || '發生不明錯誤',
+      text: error.response.status === 422 ? error.response.data.error[0] : '', // 重複註冊
+    })
     return Promise.reject(error)
   }
 )

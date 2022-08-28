@@ -1,16 +1,19 @@
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import TodoItem from './TodoItem'
 import { api } from '../../helpers/api'
-import { useAuth } from '../../helpers/Context'
+import { useAuth } from '../../helpers/context'
 
 function TodoList({ list, setList }) {
-  const { token } = useAuth()
   const [state, setState] = useState('all')
+  const [isLoaded, setIsLoaded] = useState(false)
+  const { token, setToken } = useAuth()
+  const navigate = useNavigate()
+
   const showList = state === 'all' ? list : list.filter(item => item.state === state)
-  const completeCount = list.filter(item => item.state === 'complete').length
+  const activeCount = list.filter(item => item.state === 'active').length
 
   const onTabClick = e => {
-    e.preventDefault()
     setState(e.target.dataset.state)
   }
   const changeItem = (id, e) => {
@@ -24,8 +27,7 @@ function TodoList({ list, setList }) {
     )
     patchTodo(id)
   }
-  const removeItem = (e, id) => {
-    e.preventDefault()
+  const removeItem = id => {
     setList(state => state.filter(item => (id ? item.id !== id : item.state !== 'complete')))
     if (id) {
       deleteTodo(id)
@@ -37,6 +39,8 @@ function TodoList({ list, setList }) {
       })
     }
   }
+
+  // api
   const getTodo = async () => {
     try {
       const { data } = await api({
@@ -52,6 +56,15 @@ function TodoList({ list, setList }) {
       setList(list)
     } catch (error) {
       console.error(error)
+      if (error.response.status === 401) {
+        setTimeout(() => {
+          localStorage.removeItem('token')
+          setToken('')
+          navigate('/login')
+        }, 1500);
+      }
+    } finally {
+      setIsLoaded(true)
     }
   }
   const patchTodo = async id => {
@@ -110,17 +123,22 @@ function TodoList({ list, setList }) {
         </li>
       </ul>
       <div className="todoList_items">
-        <ul className="todoList_item">
-          {showList.map((item, i) => (
-            <TodoItem key={i} data={item} changeItem={changeItem} removeItem={removeItem} />
-          ))}
-        </ul>
+        {list.length ? (
+          <ul className="todoList_item">
+            {showList.map((item, i) => (
+              <TodoItem key={i} data={item} changeItem={changeItem} removeItem={removeItem} />
+            ))}
+          </ul>
+        ) : (
+          <p className="todoList_no_item">{isLoaded ? '目前尚無待辦事項' : '載入中'}</p>
+        )}
         <div className="todoList_statistics">
-          <p>{completeCount} 個已完成項目</p>
-          <button onClick={e => removeItem(e)}>清除已完成項目</button>
+          <p>{activeCount} 個待完成項目</p>
+          <button onClick={() => removeItem()}>清除已完成項目</button>
         </div>
       </div>
     </div>
   )
 }
+
 export default TodoList

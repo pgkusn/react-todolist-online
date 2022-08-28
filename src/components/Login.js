@@ -1,7 +1,7 @@
 import { useNavigate, NavLink } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import Swal from 'sweetalert2'
-import { useAuth } from '../helpers/Context'
+import { useAuth } from '../helpers/context'
 import { api } from '../helpers/api'
 
 function Login() {
@@ -11,6 +11,7 @@ function Login() {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm()
 
   const onSubmit = async ({ email, password }) => {
@@ -25,22 +26,22 @@ function Login() {
       setToken(headers.authorization)
       localStorage.setItem('token', headers.authorization)
 
-      navigate('/')
-
-      Swal.fire({
+      await Swal.fire({
         icon: 'success',
         title: data.message,
         showConfirmButton: false,
         timer: 1500,
       })
+      navigate('/')
     } catch (error) {
       console.error(error)
+      reset({ password: '' })
     }
   }
 
   return (
     <div className="bg-yellow">
-      <div className="conatiner loginPage vhContainer ">
+      <div className="container loginPage vhContainer ">
         <div className="side">
           <img
             className="logoImg"
